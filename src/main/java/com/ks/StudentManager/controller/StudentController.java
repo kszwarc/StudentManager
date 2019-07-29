@@ -48,7 +48,11 @@ public class StudentController {
     }
 
     @DeleteMapping(value="/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public ResponseEntity delete(@PathVariable("id") Long id) {
+        Optional<Student> studentOptional = studentRepository.findById(id);
+        if (!studentOptional.isPresent())
+            return ResponseEntity.notFound().build();
         studentRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
