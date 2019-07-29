@@ -21,8 +21,14 @@ public class StudentController {
         this.studentRepository = studentRepository;
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Student> getById(@PathVariable long id) {
+        Student student = studentRepository.getOne(id);
+        return new ResponseEntity<>(student, new HttpHeaders(), HttpStatus.OK);
+    }
+
     @GetMapping
-    public List<Student> getSAll () {
+    public List<Student> getAll () {
         return studentRepository.findAll();
     }
 
