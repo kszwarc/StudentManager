@@ -23,8 +23,8 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> getById(@PathVariable long id) {
-        Student student = studentRepository.getOne(id);
-        return new ResponseEntity<>(student, new HttpHeaders(), HttpStatus.OK);
+        Optional<Student> studentOptional = studentRepository.findById(id);
+        return studentOptional.map(student -> new ResponseEntity(student, new HttpHeaders(), HttpStatus.OK)).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
