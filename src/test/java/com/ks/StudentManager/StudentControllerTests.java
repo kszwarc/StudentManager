@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
@@ -55,6 +56,7 @@ public class StudentControllerTests {
         requestJSON = ow.writeValueAsString(STUDENT);
         corruptedRequestJSON = "{s}";
         when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
+        when(studentRepository.findAll()).thenReturn(Arrays.asList(new Student[] {STUDENT}));
     }
 
     @Test
@@ -126,5 +128,17 @@ public class StudentControllerTests {
         mockMvc.perform(MockMvcRequestBuilders
                 .post(URL).contentType(APPLICATION_JSON).content(corruptedRequestJSON))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void getStatusOkAndStudentsForGetAll() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(URL).contentType(APPLICATION_JSON).content(requestJSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].firstName", is(STUDENT.getFirstName())))
+                .andExpect(jsonPath("$[0].lastName", is(STUDENT.getLastName())))
+                .andExpect(jsonPath("$[0].email", is(STUDENT.getEmail())))
+                .andExpect(jsonPath("$.length()", is(1)));
     }
 }
