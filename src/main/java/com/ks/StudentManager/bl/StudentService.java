@@ -1,6 +1,6 @@
 package com.ks.StudentManager.bl;
 
-import com.ks.StudentManager.model.Student;
+import com.ks.StudentManager.bl.model.StudentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -19,23 +20,24 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public ResponseEntity<Student> getById(Long id) {
+    public ResponseEntity<StudentDTO> getById(Long id) {
         Optional<Student> studentOptional = studentRepository.findById(id);
         return studentOptional.map(student -> new ResponseEntity(student, new HttpHeaders(), HttpStatus.OK)).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public List<Student> getAll() {
-        return studentRepository.findAll();
+    public List<StudentDTO> getAll() {
+        return studentRepository.findAll().stream().map(s->StudentFactory.createTo(s)).collect(Collectors.toList());
     }
 
-    public Student add(Student student) {
-        return studentRepository.save(student);
+    public void add(StudentDTO studentDTO) {
+        studentRepository.save(StudentFactory.createFrom(studentDTO));
     }
 
-    public ResponseEntity<Object> update(Student student, Long id) {
+    public ResponseEntity<Object> update(StudentDTO studentDTO, Long id) {
         Optional<Student> studentOptional = studentRepository.findById(id);
         if (!studentOptional.isPresent())
             return ResponseEntity.notFound().build();
+        Student student = StudentFactory.createFrom(studentDTO);
         student.setId(id);
         studentRepository.save(student);
         return ResponseEntity.noContent().build();

@@ -1,4 +1,4 @@
-package com.ks.StudentManager.model;
+package com.ks.StudentManager.bl;
 
 import lombok.Data;
 

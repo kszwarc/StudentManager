@@ -1,7 +1,7 @@
-package com.ks.StudentManager.controller;
+package com.ks.StudentManager.api;
 
-import com.ks.StudentManager.model.Student;
 import com.ks.StudentManager.bl.StudentService;
+import com.ks.StudentManager.bl.model.StudentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,22 +15,22 @@ public class StudentController {
     public StudentService studentService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getById(@PathVariable Long id) {
+    public ResponseEntity<StudentDTO> getById(@PathVariable Long id) {
         return studentService.getById(id);
     }
 
     @GetMapping
-    public List<Student> getAll() {
+    public List<StudentDTO> getAll() {
         return studentService.getAll();
     }
 
     @PostMapping
-    public Student add(@RequestBody Student student) {
-        return studentService.add(student);
+    public void add(@RequestBody StudentDTO student) {
+        studentService.add(student);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@RequestBody Student student, @PathVariable Long id) {
+    public ResponseEntity<Object> update(@RequestBody StudentDTO student, @PathVariable Long id) {
         return studentService.update(student, id);
     }
 

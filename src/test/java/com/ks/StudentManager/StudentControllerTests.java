@@ -3,7 +3,7 @@ package com.ks.StudentManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.ks.StudentManager.model.Student;
+import com.ks.StudentManager.bl.Student;
 import com.ks.StudentManager.bl.StudentRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -135,7 +135,6 @@ public class StudentControllerTests {
         mockMvc.perform(MockMvcRequestBuilders
                 .get(URL).contentType(APPLICATION_JSON).content(requestJSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].firstName", is(STUDENT.getFirstName())))
                 .andExpect(jsonPath("$[0].lastName", is(STUDENT.getLastName())))
                 .andExpect(jsonPath("$[0].email", is(STUDENT.getEmail())))
