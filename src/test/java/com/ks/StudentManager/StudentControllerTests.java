@@ -3,20 +3,16 @@ package com.ks.StudentManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.ks.StudentManager.controller.StudentController;
 import com.ks.StudentManager.model.Student;
 import com.ks.StudentManager.repository.StudentRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +26,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(SpringRunner.class)
@@ -38,11 +35,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StudentControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
-    @Mock
+    @MockBean
     private StudentRepository studentRepository;
     private MockMvc mockMvc;
     private final MediaType APPLICATION_JSON = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
     private String requestJSON;
+    private String corruptedRequestJSON;
     private final String URL = "/students";
     private final String URL_WITH_WRONG_ID = URL+"/-1";
     private final Student STUDENT = new Student("Jan", "Nowak", "jannowak@kowalski.pl");
@@ -50,11 +48,13 @@ public class StudentControllerTests {
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        STUDENT.setId(1L);
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         requestJSON = ow.writeValueAsString(STUDENT);
-        Mockito.when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
+        corruptedRequestJSON = "{s}";
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
     }
 
     @Test
@@ -81,6 +81,13 @@ public class StudentControllerTests {
         mockMvc.perform(MockMvcRequestBuilders
                 .put(URL_WITH_WRONG_ID).contentType(APPLICATION_JSON).content(requestJSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getStatus4xxForWrongStudentInUpdateStudent() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .put(URL+"/1").contentType(APPLICATION_JSON).content(corruptedRequestJSON))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -113,5 +120,12 @@ public class StudentControllerTests {
         mockMvc.perform(MockMvcRequestBuilders
                 .post(URL).contentType(APPLICATION_JSON).content(requestJSON))
                 .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void getStatus4xxForWrongStudentInAddStudent() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .post(URL).contentType(APPLICATION_JSON).content(corruptedRequestJSON))
+                .andExpect(status().is4xxClientError());
     }
 }
