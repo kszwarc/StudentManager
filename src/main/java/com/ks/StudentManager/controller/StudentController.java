@@ -14,7 +14,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/students")
 public class StudentController {
-    private final StudentRepository studentRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
     public StudentController(StudentRepository studentRepository){
@@ -22,7 +22,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getById(@PathVariable long id) {
+    public ResponseEntity<Student> getById(@PathVariable Long id) {
         Optional<Student> studentOptional = studentRepository.findById(id);
         return studentOptional.map(student -> new ResponseEntity(student, new HttpHeaders(), HttpStatus.OK)).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -38,7 +38,7 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@RequestBody Student student, @PathVariable long id) {
+    public ResponseEntity<Object> update(@RequestBody Student student, @PathVariable Long id) {
         Optional<Student> studentOptional = studentRepository.findById(id);
         if (!studentOptional.isPresent())
             return ResponseEntity.notFound().build();
