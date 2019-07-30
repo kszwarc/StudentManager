@@ -2,6 +2,7 @@ package com.ks.StudentManager.controller;
 
 import com.ks.StudentManager.model.Student;
 import com.ks.StudentManager.repository.StudentRepository;
+import com.ks.StudentManager.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,45 +15,35 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/students")
 public class StudentController {
-    private StudentRepository studentRepository;
+    private StudentService studentService;
 
     @Autowired
-    public StudentController(StudentRepository studentRepository){
-        this.studentRepository = studentRepository;
+    public StudentController(StudentService studentService){
+        this.studentService = studentService;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> getById(@PathVariable Long id) {
-        Optional<Student> studentOptional = studentRepository.findById(id);
-        return studentOptional.map(student -> new ResponseEntity(student, new HttpHeaders(), HttpStatus.OK)).orElseGet(() -> ResponseEntity.notFound().build());
+        return studentService.getById(id);
     }
 
     @GetMapping
     public List<Student> getAll() {
-        return studentRepository.findAll();
+        return studentService.getAll();
     }
 
     @PostMapping
     public Student add(@RequestBody Student student) {
-        return studentRepository.save(student);
+        return studentService.add(student);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@RequestBody Student student, @PathVariable Long id) {
-        Optional<Student> studentOptional = studentRepository.findById(id);
-        if (!studentOptional.isPresent())
-            return ResponseEntity.notFound().build();
-        student.setId(id);
-        studentRepository.save(student);
-        return ResponseEntity.noContent().build();
+        return studentService.update(student, id);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Long id) {
-        Optional<Student> studentOptional = studentRepository.findById(id);
-        if (!studentOptional.isPresent())
-            return ResponseEntity.notFound().build();
-        studentRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return studentService.delete(id);
     }
 }

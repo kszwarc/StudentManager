@@ -3,6 +3,7 @@ package com.ks.StudentManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.ks.StudentManager.application.StudentManagerApplication;
 import com.ks.StudentManager.model.Student;
 import com.ks.StudentManager.repository.StudentRepository;
 import org.junit.Before;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.*;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes=StudentManagerApplication.class)
 @WebAppConfiguration
 public class StudentControllerTests {
     @Autowired

@@ -1,7 +1,6 @@
-package com.ks.StudentManager;
+package com.ks.StudentManager.application;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
