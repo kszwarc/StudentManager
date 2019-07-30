@@ -1,4 +1,4 @@
-package com.ks.StudentManager.repository;
+package com.ks.StudentManager.bl;
 
 import com.ks.StudentManager.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;

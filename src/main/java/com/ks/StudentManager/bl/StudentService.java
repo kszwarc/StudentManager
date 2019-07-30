@@ -1,7 +1,6 @@
-package com.ks.StudentManager.service;
+package com.ks.StudentManager.bl;
 
 import com.ks.StudentManager.model.Student;
-import com.ks.StudentManager.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

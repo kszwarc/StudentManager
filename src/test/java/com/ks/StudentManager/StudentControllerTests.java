@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ks.StudentManager.application.StudentManagerApplication;
 import com.ks.StudentManager.model.Student;
-import com.ks.StudentManager.repository.StudentRepository;
+import com.ks.StudentManager.bl.StudentRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
