@@ -5,13 +5,14 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ks.StudentManager.controller.StudentController;
 import com.ks.StudentManager.model.Student;
+import com.ks.StudentManager.repository.StudentRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.Charset;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -36,6 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StudentControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
+    @Mock
+    private StudentRepository studentRepository;
     private MockMvc mockMvc;
     private final MediaType APPLICATION_JSON = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
     private String requestJSON;
@@ -50,12 +54,11 @@ public class StudentControllerTests {
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         requestJSON = ow.writeValueAsString(STUDENT);
+        Mockito.when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
     }
 
     @Test
     public void getStatusOkAndStudentForProperlyIndexInGetById() throws Exception {
-        StudentController studentController = Mockito.mock(StudentController.class);
-        Mockito.when(studentController.getById(1L)).thenReturn(new ResponseEntity(STUDENT, new HttpHeaders(), HttpStatus.OK));
         mockMvc.perform(MockMvcRequestBuilders
                 .get(URL+"/1").contentType(APPLICATION_JSON).content(requestJSON))
                 .andExpect(status().isOk())
@@ -81,6 +84,14 @@ public class StudentControllerTests {
     }
 
     @Test
+    public void getStatus2xxForProperlyIndexInUpdateStudent() throws Exception {
+        Student tmpStudent = new Student("Andrzej", "Nowakowski", "andrzej@n.pl");
+        mockMvc.perform(MockMvcRequestBuilders
+                .put(URL+"/1").contentType(APPLICATION_JSON).content(requestJSON))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
     public void getStatusNotFoundForWrongIndexInDeleteStudent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .delete(URL_WITH_WRONG_ID)
@@ -89,13 +100,18 @@ public class StudentControllerTests {
     }
 
     @Test
-    public void getStatusOkAndEntityForProperlyStudentInAddStudent() throws Exception {
+    public void getStatusOkForProperlyIndexInDeleteStudent() throws Exception {
+        StudentRepository studentRepository = Mockito.mock(StudentRepository.class);
+        Mockito.when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete(URL+"/1"))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void getStatus2xxForProperlyStudentInAddStudent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .post(URL).contentType(APPLICATION_JSON).content(requestJSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is(STUDENT.getFirstName())))
-                .andExpect(jsonPath("$.lastName", is(STUDENT.getLastName())))
-                .andExpect(jsonPath("$.email", is(STUDENT.getEmail())));
+                .andExpect(status().is2xxSuccessful());
     }
 }
