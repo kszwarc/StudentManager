@@ -1,9 +1,9 @@
-package com.ks.StudentManager.application;
+package com.ks.StudentManager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages={"com.ks.bl", "com.ks.controller", "com.ks.model"})
+@SpringBootApplication
 public class StudentManagerApplication {
 
 	public static void main(String[] args) {

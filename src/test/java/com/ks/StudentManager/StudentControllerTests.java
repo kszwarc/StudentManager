@@ -3,7 +3,6 @@ package com.ks.StudentManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.ks.StudentManager.application.StudentManagerApplication;
 import com.ks.StudentManager.model.Student;
 import com.ks.StudentManager.bl.StudentRepository;
 import org.junit.Before;

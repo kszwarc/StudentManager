@@ -1,6 +1,5 @@
 package com.ks.StudentManager;
 
-import com.ks.StudentManager.application.StudentManagerApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
