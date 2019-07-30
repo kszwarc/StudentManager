@@ -92,7 +92,6 @@ public class StudentControllerTests {
 
     @Test
     public void getStatus2xxForProperlyIndexInUpdateStudent() throws Exception {
-        Student tmpStudent = new Student("Andrzej", "Nowakowski", "andrzej@n.pl");
         mockMvc.perform(MockMvcRequestBuilders
                 .put(URL+"/1").contentType(APPLICATION_JSON).content(requestJSON))
                 .andExpect(status().is2xxSuccessful());
