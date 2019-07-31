@@ -29,8 +29,9 @@ public class StudentService {
         return studentRepository.findAll().stream().map(s->StudentFactory.createTo(s)).collect(Collectors.toList());
     }
 
-    public void add(StudentDTO studentDTO) {
-        studentRepository.save(StudentFactory.createFrom(studentDTO));
+    public ResponseEntity<StudentDTO> add(StudentDTO studentDTO) {
+        Student student = studentRepository.saveAndFlush(StudentFactory.createFrom(studentDTO));
+        return new ResponseEntity(StudentFactory.createTo(student), new HttpHeaders(), HttpStatus.OK);
     }
 
     public ResponseEntity<Object> update(StudentDTO studentDTO, Long id) {

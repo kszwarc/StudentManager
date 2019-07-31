@@ -107,18 +107,8 @@ public class StudentControllerTests {
 
     @Test
     public void getStatusOkForProperlyIndexInDeleteStudent() throws Exception {
-        StudentRepository studentRepository = Mockito.mock(StudentRepository.class);
-        Mockito.when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
-
         mockMvc.perform(MockMvcRequestBuilders
                 .delete(URL+"/1"))
-                .andExpect(status().is2xxSuccessful());
-    }
-
-    @Test
-    public void getStatus2xxForProperlyStudentInAddStudent() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                .post(URL).contentType(APPLICATION_JSON).content(requestJSON))
                 .andExpect(status().is2xxSuccessful());
     }
 

@@ -35,6 +35,7 @@ public class StudentServiceTests {
     public void setUp() {
         when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
         when(studentRepository.findAll()).thenReturn(Arrays.asList(new Student[] {STUDENT}));
+        when(studentRepository.saveAndFlush(STUDENT)).thenReturn(STUDENT);
         studentService = new StudentService(studentRepository);
     }
 
@@ -67,6 +68,10 @@ public class StudentServiceTests {
 
     @Test
     public void addTest() {
+        ResponseEntity<StudentDTO> expected = new ResponseEntity(STUDENT_DTO, new HttpHeaders(), HttpStatus.OK);
 
+        ResponseEntity<StudentDTO> result = studentService.add(STUDENT_DTO);
+
+        Assert.assertEquals(expected, result);
     }
 }

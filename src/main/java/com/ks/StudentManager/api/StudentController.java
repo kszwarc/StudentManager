@@ -29,8 +29,8 @@ public class StudentController {
     }
 
     @PostMapping
-    public void add(@RequestBody StudentDTO student) {
-        studentService.add(student);
+    public ResponseEntity add(@RequestBody StudentDTO student) {
+        return studentService.add(student);
     }
 
     @PutMapping("/{id}")
