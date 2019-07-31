@@ -41,7 +41,7 @@ public class StudentControllerTests {
     private MockMvc mockMvc;
     private final MediaType APPLICATION_JSON = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
     private String requestJSON;
-    private String corruptedRequestJSON;
+    private String CORRUPTED_REQUEST_JSON = "{s}";
     private final String URL = "/students";
     private final String URL_WITH_WRONG_ID = URL+"/-1";
     private final Student STUDENT = new Student("Jan", "Nowak", "jannowak@kowalski.pl");
@@ -54,7 +54,6 @@ public class StudentControllerTests {
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         requestJSON = ow.writeValueAsString(STUDENT);
-        corruptedRequestJSON = "{s}";
         when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
         when(studentRepository.findAll()).thenReturn(Arrays.asList(new Student[] {STUDENT}));
     }
@@ -87,7 +86,7 @@ public class StudentControllerTests {
     @Test
     public void getStatus4xxForWrongStudentInUpdateStudent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .put(URL+"/1").contentType(APPLICATION_JSON).content(corruptedRequestJSON))
+                .put(URL+"/1").contentType(APPLICATION_JSON).content(CORRUPTED_REQUEST_JSON))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -126,7 +125,7 @@ public class StudentControllerTests {
     @Test
     public void getStatus4xxForWrongStudentInAddStudent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .post(URL).contentType(APPLICATION_JSON).content(corruptedRequestJSON))
+                .post(URL).contentType(APPLICATION_JSON).content(CORRUPTED_REQUEST_JSON))
                 .andExpect(status().is4xxClientError());
     }
 
