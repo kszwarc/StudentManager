@@ -34,7 +34,7 @@ public class StudentService {
         return new ResponseEntity(StudentFactory.createTo(student), new HttpHeaders(), HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> update(StudentDTO studentDTO, Long id) {
+    public ResponseEntity update(StudentDTO studentDTO, Long id) {
         Optional<Student> studentOptional = studentRepository.findById(id);
         if (!studentOptional.isPresent())
             return ResponseEntity.notFound().build();

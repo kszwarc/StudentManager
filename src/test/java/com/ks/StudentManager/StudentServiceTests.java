@@ -74,4 +74,41 @@ public class StudentServiceTests {
 
         Assert.assertEquals(expected, result);
     }
+
+    @Test
+    public void updateWrongIdTest() {
+        ResponseEntity<StudentDTO> expected = ResponseEntity.notFound().build();
+
+        ResponseEntity<StudentDTO> result = studentService.update(STUDENT_DTO,-1L);
+
+        Assert.assertEquals(expected, result);
+    }
+
+    @Test
+    public void updateProperlyIdTest() {
+        ResponseEntity<StudentDTO> expected = ResponseEntity.noContent().build();;
+
+        ResponseEntity<StudentDTO> result = studentService.update(STUDENT_DTO, 1L);
+
+        Assert.assertEquals(expected, result);
+    }
+
+    @Test
+    public void deleteWrongIdTest() {
+        ResponseEntity<StudentDTO> expected = ResponseEntity.notFound().build();
+
+        ResponseEntity<StudentDTO> result = studentService.delete(-1L);
+
+        Assert.assertEquals(expected, result);
+    }
+
+    @Test
+    public void deleteProperlyIdTest() {
+        ResponseEntity<StudentDTO> expected = ResponseEntity.noContent().build();;
+
+        ResponseEntity<StudentDTO> result = studentService.delete(1L);
+
+        Assert.assertEquals(expected, result);
+    }
+
 }
