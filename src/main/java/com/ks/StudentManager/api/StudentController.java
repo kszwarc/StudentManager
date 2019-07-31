@@ -11,8 +11,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/students")
 public class StudentController {
+    private StudentService studentService;
+
     @Autowired
-    public StudentService studentService;
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<StudentDTO> getById(@PathVariable Long id) {

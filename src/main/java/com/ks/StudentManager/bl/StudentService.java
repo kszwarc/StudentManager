@@ -22,7 +22,7 @@ public class StudentService {
 
     public ResponseEntity<StudentDTO> getById(Long id) {
         Optional<Student> studentOptional = studentRepository.findById(id);
-        return studentOptional.map(student -> new ResponseEntity(student, new HttpHeaders(), HttpStatus.OK)).orElseGet(() -> ResponseEntity.notFound().build());
+        return studentOptional.map(student -> new ResponseEntity(StudentFactory.createTo(student), new HttpHeaders(), HttpStatus.OK)).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     public List<StudentDTO> getAll() {
