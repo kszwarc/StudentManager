@@ -1,8 +1,5 @@
 package com.ks.StudentManager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ks.StudentManager.bl.Student;
 import com.ks.StudentManager.bl.StudentFactory;
 import com.ks.StudentManager.bl.StudentRepository;
@@ -12,28 +9,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes=StudentManagerApplication.class)
-@WebAppConfiguration
 public class StudentServiceTests {
-    @Autowired
-    private WebApplicationContext webApplicationContext;
     @MockBean
     private StudentRepository studentRepository;
     private StudentService studentService;
@@ -56,4 +47,26 @@ public class StudentServiceTests {
         Assert.assertEquals(expected, result);
     }
 
+    @Test
+    public void getByIdTestWrongId() {
+        ResponseEntity<StudentDTO> expected = ResponseEntity.notFound().build();
+
+        ResponseEntity<StudentDTO> result = studentService.getById(-1L);
+
+        Assert.assertEquals(expected, result);
+    }
+
+    @Test
+    public void getAllTest() {
+        StudentDTO[] expected = new StudentDTO[] {STUDENT_DTO};
+
+        List<StudentDTO> result = studentService.getAll();
+
+        Assert.assertArrayEquals(expected, result.toArray());
+    }
+
+    @Test
+    public void addTest() {
+
+    }
 }

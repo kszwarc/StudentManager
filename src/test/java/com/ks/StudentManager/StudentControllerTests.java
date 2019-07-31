@@ -64,7 +64,6 @@ public class StudentControllerTests {
         mockMvc.perform(MockMvcRequestBuilders
                 .get(URL+"/1").contentType(APPLICATION_JSON).content(requestJSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.firstName", is(STUDENT.getFirstName())))
                 .andExpect(jsonPath("$.lastName", is(STUDENT.getLastName())))
                 .andExpect(jsonPath("$.email", is(STUDENT.getEmail())));
@@ -111,6 +110,7 @@ public class StudentControllerTests {
     public void getStatusOkForProperlyIndexInDeleteStudent() throws Exception {
         StudentRepository studentRepository = Mockito.mock(StudentRepository.class);
         Mockito.when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
+
         mockMvc.perform(MockMvcRequestBuilders
                 .delete(URL+"/1"))
                 .andExpect(status().is2xxSuccessful());
