@@ -30,10 +30,12 @@ public class StudentServiceTests {
     private StudentService studentService;
     private final Student STUDENT = new Student("Jan", "Nowak", "Jan@nowak.pl");
     private final StudentDTO STUDENT_DTO = StudentFactory.createTo(STUDENT);
+    private final Long WRONG_ID = -1L;
+    private final Long CORRECT_ID = 1L;
 
     @Before
     public void setUp() {
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(STUDENT));
+        when(studentRepository.findById(CORRECT_ID)).thenReturn(Optional.of(STUDENT));
         when(studentRepository.findAll()).thenReturn(Arrays.asList(new Student[] {STUDENT}));
         when(studentRepository.saveAndFlush(STUDENT)).thenReturn(STUDENT);
         studentService = new StudentService(studentRepository);
@@ -43,7 +45,7 @@ public class StudentServiceTests {
     public void getByIdTestProperlyStudent() {
         ResponseEntity<StudentDTO> expected = new ResponseEntity(STUDENT_DTO, new HttpHeaders(), HttpStatus.OK);
 
-        ResponseEntity<StudentDTO> result = studentService.getById(1L);
+        ResponseEntity<StudentDTO> result = studentService.getById(CORRECT_ID);
 
         Assert.assertEquals(expected, result);
     }
@@ -52,7 +54,7 @@ public class StudentServiceTests {
     public void getByIdTestWrongId() {
         ResponseEntity<StudentDTO> expected = ResponseEntity.notFound().build();
 
-        ResponseEntity<StudentDTO> result = studentService.getById(-1L);
+        ResponseEntity<StudentDTO> result = studentService.getById(WRONG_ID);
 
         Assert.assertEquals(expected, result);
     }
@@ -79,7 +81,7 @@ public class StudentServiceTests {
     public void updateWrongIdTest() {
         ResponseEntity<StudentDTO> expected = ResponseEntity.notFound().build();
 
-        ResponseEntity<StudentDTO> result = studentService.update(STUDENT_DTO,-1L);
+        ResponseEntity<StudentDTO> result = studentService.update(STUDENT_DTO,WRONG_ID);
 
         Assert.assertEquals(expected, result);
     }
@@ -88,7 +90,7 @@ public class StudentServiceTests {
     public void updateProperlyIdTest() {
         ResponseEntity<StudentDTO> expected = ResponseEntity.noContent().build();;
 
-        ResponseEntity<StudentDTO> result = studentService.update(STUDENT_DTO, 1L);
+        ResponseEntity<StudentDTO> result = studentService.update(STUDENT_DTO, CORRECT_ID);
 
         Assert.assertEquals(expected, result);
     }
@@ -97,7 +99,7 @@ public class StudentServiceTests {
     public void deleteWrongIdTest() {
         ResponseEntity<StudentDTO> expected = ResponseEntity.notFound().build();
 
-        ResponseEntity<StudentDTO> result = studentService.delete(-1L);
+        ResponseEntity<StudentDTO> result = studentService.delete(WRONG_ID);
 
         Assert.assertEquals(expected, result);
     }
@@ -106,7 +108,7 @@ public class StudentServiceTests {
     public void deleteProperlyIdTest() {
         ResponseEntity<StudentDTO> expected = ResponseEntity.noContent().build();;
 
-        ResponseEntity<StudentDTO> result = studentService.delete(1L);
+        ResponseEntity<StudentDTO> result = studentService.delete(CORRECT_ID);
 
         Assert.assertEquals(expected, result);
     }
